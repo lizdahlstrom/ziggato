@@ -13,12 +13,39 @@ const getPrint = (games) => {
   let str = '```Games in common: \n \n';
 
   games.forEach((game) => {
-    str += game.name + '\n';
+    str += game + '\n';
   });
 
   str += '```';
 
   return str;
+};
+
+const getIncommonGames = async (args) => {
+  const data = [];
+
+  for (let i = 1; i < args.length; i++) {
+    const userGames = await getGames(args[i]);
+    data.push(userGames);
+  }
+
+  let gamesInCommon = data[0];
+
+  for (let i = 1; i < data.length; i++) {
+    gamesInCommon = gamesInCommon.filter((g) =>
+      data[i].some(({ appid }) => g.appid === appid)
+    );
+  }
+
+  gamesInCommon = gamesInCommon.map((a) => a.name);
+
+  gamesInCommon.sort((a, b) => {
+    a.toLowerCase().localeCompare(b.toLowerCase(), 'en', {
+      sensitivity: 'base',
+    });
+  });
+
+  return gamesInCommon;
 };
 
 module.exports = {
@@ -34,23 +61,8 @@ module.exports = {
           return;
         }
 
-        const user1Games = await getGames(args[1]);
-        const user2Games = await getGames(args[2]);
-
-        let gamesInCommon = await user1Games.filter((g) =>
-          user2Games.some(({ appid }) => g.appid === appid)
-        );
-
-        gamesInCommon.sort((a, b) => {
-          a.name
-            .toLowerCase()
-            .localeCompare(b.name.toLowerCase(), 'en', { sensitivity: 'base' });
-        });
-
-        console.log(gamesInCommon);
-
+        let gamesInCommon = await getIncommonGames(args);
         res = getPrint(gamesInCommon);
-
         break;
     }
 
