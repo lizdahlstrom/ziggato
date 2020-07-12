@@ -10,15 +10,10 @@ const getGames = async (userId) => {
 };
 
 const getPrint = (games) => {
-  let str = '```Games in common: \n \n';
+  games = games.map((a) => a.name);
+  games.sort();
 
-  games.forEach((game) => {
-    str += game + '\n';
-  });
-
-  str += '```';
-
-  return str;
+  return `\`\`\`Games in common: \n \n${games.join('\n')} \`\`\``;
 };
 
 const getIncommonGames = async (args) => {
@@ -37,15 +32,9 @@ const getIncommonGames = async (args) => {
     );
   }
 
-  gamesInCommon = gamesInCommon.map((a) => a.name);
+  console.log('length of gamesInCommon common is', await gamesInCommon.length);
 
-  gamesInCommon.sort((a, b) => {
-    a.toLowerCase().localeCompare(b.toLowerCase(), 'en', {
-      sensitivity: 'base',
-    });
-  });
-
-  return gamesInCommon;
+  return await gamesInCommon;
 };
 
 module.exports = {
@@ -62,7 +51,8 @@ module.exports = {
         }
 
         let gamesInCommon = await getIncommonGames(args);
-        res = getPrint(gamesInCommon);
+
+        res = getPrint(await gamesInCommon);
         break;
     }
 
