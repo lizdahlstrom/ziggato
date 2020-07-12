@@ -50,7 +50,11 @@ module.exports = {
           return;
         }
 
-        let gamesInCommon = await getIncommonGames(args);
+        try {
+          let gamesInCommon = await getIncommonGames(args);
+        } catch (err) {
+          msg.channel.send('Invalid steam ID :3');
+        }
 
         res = getPrint(await gamesInCommon);
         break;
