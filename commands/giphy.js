@@ -14,12 +14,11 @@ module.exports = {
         break;
       default:
         const argStr = args.join('+')
-        console.log(argStr);
         gif = await fetch(`https://api.giphy.com/v1/gifs/translate?s=${argStr}&api_key=${KEY}`)
         break;
     }
 
     gif = await gif.json()
-    msg.reply(gif.data.url);
+    msg.channel.send(gif.data.url);
   },
 };
