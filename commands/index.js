@@ -3,4 +3,5 @@ module.exports = {
   Giphy: require('./giphy'),
   Help: require('./commandsList'),
   Steam: require('./steam'),
+  Dosh: require('./dosh'),
 };

@@ -110,6 +110,25 @@ const inCommonWrapper = async (args, msg, func) => {
   msg.channel.send(res);
 };
 
+const getInCommonByCategory = async (args, msg, categoryID, categoryName) => {
+  await inCommonWrapper(args, msg, async (games) => {
+    let commonGames = [...games];
+    commonGames = Promise.all(commonGames.map((g) => getAppDetails(g)));
+
+    commonGames = (await commonGames).filter((game) => {
+      const categories = game ? game.categories : null;
+      let isCoop = false;
+      if (categories) {
+        isCoop = categories.some((c) => c.id === categoryID);
+      }
+      return isCoop;
+    });
+
+    const output = getPrint(await commonGames, categoryName);
+    return output;
+  });
+};
+
 module.exports = {
   name: 'steam',
   description: 'Steam',
@@ -137,23 +156,11 @@ module.exports = {
         break;
       }
       case 'coop': {
-        await inCommonWrapper(args, msg, async (games) => {
-          let commonGames = [...games];
-          commonGames = Promise.all(commonGames.map((g) => getAppDetails(g)));
-
-          commonGames = (await commonGames).filter((game) => {
-            const categories = game ? game.categories : null;
-            let isCoop = false;
-            if (categories) {
-              isCoop = categories.some((c) => c.id === 9);
-            }
-            return isCoop;
-          });
-
-          const output = getPrint(await commonGames, 'co-op');
-          return output;
-        });
-
+        await getInCommonByCategory(args, msg, 9, 'co-op');
+        break;
+      }
+      case 'mp': {
+        await getInCommonByCategory(args, msg, 1, 'multi-player');
         break;
       }
     }
