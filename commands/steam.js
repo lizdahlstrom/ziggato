@@ -43,19 +43,23 @@ const getAppDetails = async (app) => {
     res = await res.json();
     res = res[app.appid].data;
   } catch (err) {
-    throw new Error('Could not fetch details of ' + app.appid + ' from api.');
+    throw new Error(
+      'Could not fetch details of ' +
+        app.appid +
+        ' from api. Because Steam API sucks. Yeah.'
+    );
   }
 
   return res;
 };
 
-const getPrint = (games) => {
+const getPrint = (games, category) => {
   const gamesCopy = games.map((a) => a.name);
   gamesCopy.sort();
 
-  return `\`\`\`You have ${
-    gamesCopy.length
-  } games in common: \n \n${gamesCopy.join('\n')} \`\`\``;
+  return `\`\`\`You have ${gamesCopy.length} ${
+    category ? category + ' ' : ''
+  }games in common: \n \n${gamesCopy.join('\n')} \`\`\``;
 };
 
 const removeDuplicates = (arr) => {
@@ -100,7 +104,7 @@ const inCommonWrapper = async (args, msg, func) => {
   try {
     res = await func(gamesInCommon);
   } catch (err) {
-    res = `well, something went wrong: (${err.message})`;
+    res = `Well, something went wrong: ${err.message}`;
   }
 
   msg.channel.send(res);
@@ -110,10 +114,10 @@ module.exports = {
   name: 'steam',
   description: 'Steam',
   async execute(msg, args) {
-    let res = 'Errorz...';
-
     switch (args[0]) {
       case 'incommon': {
+        let res = 'Errorz...';
+
         if (args.length < 3) {
           res = 'No dice. To compare, you need TWO steam IDs.';
           return;
@@ -127,6 +131,8 @@ module.exports = {
         } catch (err) {
           res = `Invalid steam ID :3: (${err.message})`;
         }
+
+        msg.channel.send(res);
 
         break;
       }
@@ -144,12 +150,12 @@ module.exports = {
             return isCoop;
           });
 
-          const output = getPrint(await commonGames);
+          const output = getPrint(await commonGames, 'co-op');
           return output;
         });
+
+        break;
       }
     }
-
-    msg.channel.send(res);
   },
 };
