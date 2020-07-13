@@ -38,7 +38,7 @@ const getIncommonGames = async (args) => {
 };
 
 module.exports = {
-  name: '!steam',
+  name: 'steam',
   description: 'Steam',
   async execute(msg, args) {
     let res = '';
@@ -52,11 +52,11 @@ module.exports = {
 
         try {
           let gamesInCommon = await getIncommonGames(args);
+          res = getPrint(await gamesInCommon);
         } catch (err) {
           msg.channel.send('Invalid steam ID :3');
         }
 
-        res = getPrint(await gamesInCommon);
         break;
     }
 

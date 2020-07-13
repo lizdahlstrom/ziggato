@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 module.exports = {
-  name: '!gif',
+  name: 'gif',
   description: 'Giphy',
   async execute(msg, args) {
     const KEY = process.env.GIPHY_KEY;

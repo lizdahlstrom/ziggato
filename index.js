@@ -17,10 +17,11 @@ bot.on('ready', () => {
 });
 
 bot.on('message', (msg) => {
-  if (msg.author.bot) return;
-
   const args = msg.content.split(/ +/);
-  const command = args.shift().toLowerCase();
+
+  if (msg.author.bot || shiftFirstElement(args) !== 'gato') return;
+
+  const command = shiftFirstElement(args);
   console.info(`Called command: ${command}`);
 
   if (!bot.commands.has(command)) return;
@@ -32,3 +33,7 @@ bot.on('message', (msg) => {
     msg.reply('there was an error trying to execute that command!');
   }
 });
+
+const shiftFirstElement = (arr) => {
+  return arr.shift().toLowerCase();
+};
