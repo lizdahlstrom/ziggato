@@ -34,13 +34,28 @@ const getUserID = async (vanityURL) => {
   return result;
 };
 
-const getPrint = (games) => {
-  games = games.map((a) => a.name);
-  games.sort();
+const getAppDetails = async (app) => {
+  let url = `https://store.steampowered.com/api/appdetails?appids=${app.appid}`;
+  let res = '';
 
-  return `\`\`\`You have ${games.length} games common: \n \n${games.join(
-    '\n'
-  )} \`\`\``;
+  try {
+    res = await fetch(url);
+    res = await res.json();
+    res = res[app.appid].data;
+  } catch (err) {
+    throw new Error('Could not fetch details of ' + app.appid + ' from api.');
+  }
+
+  return res;
+};
+
+const getPrint = (games) => {
+  const gamesCopy = games.map((a) => a.name);
+  gamesCopy.sort();
+
+  return `\`\`\`You have ${
+    gamesCopy.length
+  } games in common: \n \n${gamesCopy.join('\n')} \`\`\``;
 };
 
 const removeDuplicates = (arr) => {
@@ -63,9 +78,32 @@ const getIncommonGames = async (args) => {
     );
   }
 
-  console.log('length of gamesInCommon common is', await gamesInCommon.length);
-
   return await gamesInCommon;
+};
+
+const inCommonWrapper = async (args, msg, func) => {
+  let res = 'Errorz...';
+
+  if (args.length < 3) {
+    res = 'No dice. To compare, you need TWO steam IDs.';
+  }
+
+  const users = removeDuplicates(args);
+  let gamesInCommon = null;
+
+  try {
+    gamesInCommon = await getIncommonGames(users);
+  } catch (err) {
+    res = `Invalid steam ID :3: (${err.message})`;
+  }
+
+  try {
+    res = await func(gamesInCommon);
+  } catch (err) {
+    res = `well, something went wrong: (${err.message})`;
+  }
+
+  msg.channel.send(res);
 };
 
 module.exports = {
@@ -75,9 +113,9 @@ module.exports = {
     let res = 'Errorz...';
 
     switch (args[0]) {
-      case 'incommon':
+      case 'incommon': {
         if (args.length < 3) {
-          msg.channel.send('No dice. To compare, you need TWO steam IDs.');
+          res = 'No dice. To compare, you need TWO steam IDs.';
           return;
         }
 
@@ -91,6 +129,25 @@ module.exports = {
         }
 
         break;
+      }
+      case 'coop': {
+        await inCommonWrapper(args, msg, async (games) => {
+          let commonGames = [...games];
+          commonGames = Promise.all(commonGames.map((g) => getAppDetails(g)));
+
+          commonGames = (await commonGames).filter((game) => {
+            const categories = game ? game.categories : null;
+            let isCoop = false;
+            if (categories) {
+              isCoop = categories.some((c) => c.id === 9);
+            }
+            return isCoop;
+          });
+
+          const output = getPrint(await commonGames);
+          return output;
+        });
+      }
     }
 
     msg.channel.send(res);
