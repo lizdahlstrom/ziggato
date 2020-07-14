@@ -37,7 +37,10 @@ module.exports = {
       embed.setColor(palette.mid1);
       embed.setTitle(result);
       embed.setDescription('Dosh converter 🐈');
-      embed.setFooter(`Requested by ${msg.author.username}`);
+      embed.setFooter(
+        `Requested by ${msg.author.username}`,
+        msg.author.authorURL
+      );
       embed.setTimestamp(new Date());
     } catch (err) {
       result += `: ${err}`;

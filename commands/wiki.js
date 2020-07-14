@@ -1,4 +1,6 @@
 const fetch = require('node-fetch');
+const Discord = require('discord.js');
+const { palette } = require('../config.json');
 
 module.exports = {
   name: 'wiki',
@@ -7,8 +9,9 @@ module.exports = {
     const searchStr = args.join('%20');
     const url = `https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=${searchStr}`;
 
-    let resultStr = '```';
-    const maxLength = 900;
+    let resultStr = null;
+    const maxLength = 880;
+    const embed = new Discord.MessageEmbed();
 
     try {
       let result = await fetch(url);
@@ -19,17 +22,31 @@ module.exports = {
 
       if (!pageID) throw new Error(`Nopes! Couldn't find that in da wiki 😿`);
 
-      result = `${result.title} \n\n${result.extract}`;
+      let title = result.title;
+      let extract = result.extract;
 
-      resultStr +=
-        result.length > maxLength ? result.substr(0, maxLength) : result;
+      resultStr =
+        extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) + '.';
 
-      resultStr += `... \n\nhttps://en.wikipedia.org/?curid=${pageID}\`\`\``;
+      embed.setColor(palette.dark);
+      embed.setAuthor(
+        'Wikipedia',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
+        'https://en.wikipedia.org'
+      );
+      embed.setTitle(title);
+      embed.setURL(`https://en.wikipedia.org/?curid=${pageID}`);
+      embed.setDescription(resultStr);
+      embed.setFooter(
+        `Requested by ${msg.author.username}`,
+        msg.author.displayAvatarURL
+      );
+      embed.setTimestamp(new Date());
     } catch (error) {
       console.log(error);
       resultStr = error.message;
     }
 
-    msg.channel.send(resultStr);
+    msg.channel.send(resultStr ? embed : 'Something went wrong');
   },
 };
