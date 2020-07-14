@@ -4,4 +4,5 @@ module.exports = {
   Help: require('./commandsList'),
   Steam: require('./steam'),
   Dosh: require('./dosh'),
+  Wiki: require('./wiki'),
 };

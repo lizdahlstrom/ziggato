@@ -18,7 +18,7 @@ module.exports = {
         `Wrong number input: ${args[2]}, typeof: ${typeof args[2]}`
       );
 
-    let result = 'Something went wrong';
+    let result = null;
 
     try {
       const url = `https://api.exchangeratesapi.io/latest?symbols=${args[1].toUpperCase()}&base=${args[0].toUpperCase()}`;
@@ -34,6 +34,13 @@ module.exports = {
       result += `: ${err}`;
     }
 
-    msg.channel.send(result);
+    const doshEmbed = {
+      color: 0x0099ff,
+      title: result,
+      description: 'Dosh converter 🐈',
+      timestamp: new Date(),
+    };
+
+    msg.channel.send(result ? { embed: doshEmbed } : 'Something went wrong');
   },
 };
