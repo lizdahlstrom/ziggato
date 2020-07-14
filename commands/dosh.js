@@ -1,4 +1,6 @@
 const fetch = require('node-fetch');
+const Discord = require('discord.js');
+const { palette } = require('../config.json');
 
 module.exports = {
   name: 'dosh',
@@ -9,6 +11,7 @@ module.exports = {
     const abbrReg = new RegExp('^[A-Za-z]{3}$');
     const numberReg = new RegExp('^\\d+$');
     const amount = Number(args[2]);
+    const embed = new Discord.MessageEmbed();
 
     if (!abbrReg.test(args[0]) || !abbrReg.test(args[1]))
       throw new Error('Input can not be a currency');
@@ -30,17 +33,16 @@ module.exports = {
       result = `${args[2]} ${args[0].toUpperCase()} = ${(
         Number(currency) * amount
       ).toFixed(2)} ${args[1].toUpperCase()} `;
+
+      embed.setColor(palette.mid1);
+      embed.setTitle(result);
+      embed.setDescription('Dosh converter 🐈');
+      embed.setFooter(`Requested by ${msg.author.username}`);
+      embed.setTimestamp(new Date());
     } catch (err) {
       result += `: ${err}`;
     }
 
-    const doshEmbed = {
-      color: 0x0099ff,
-      title: result,
-      description: 'Dosh converter 🐈',
-      timestamp: new Date(),
-    };
-
-    msg.channel.send(result ? { embed: doshEmbed } : 'Something went wrong');
+    msg.channel.send(result ? embed : 'Something went wrong');
   },
 };
