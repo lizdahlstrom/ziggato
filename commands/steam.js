@@ -1,5 +1,7 @@
 const KEY = process.env.STEAM_KEY;
 const fetch = require('node-fetch');
+const Discord = require('discord.js');
+const { palette } = require('../config.json');
 
 const getGames = async (userId) => {
   // regex if userId is a steamID or a .. other thing
@@ -53,13 +55,30 @@ const getAppDetails = async (app) => {
   return res;
 };
 
-const getPrint = (games, category) => {
+const getPrint = (games, category, msg) => {
+  const embed = new Discord.MessageEmbed();
   const gamesCopy = games.map((a) => a.name);
   gamesCopy.sort();
 
-  return `\`\`\`You have ${gamesCopy.length} ${
-    category ? category + ' ' : ''
-  }games in common: \n \n${gamesCopy.join('\n')} \`\`\``;
+  embed.setColor(palette.mid3);
+  embed.setAuthor(
+    'Steam',
+    'https://seeklogo.com/images/S/steam-logo-73274B19E3-seeklogo.com.png',
+    'https://store.steampowered.com/'
+  );
+  embed.setTitle(
+    `${gamesCopy.length} ${category ? category + ' ' : ''}games in common ${
+      gamesCopy.length === 0 ? '😿' : '😸'
+    }`
+  );
+  embed.setDescription(`${gamesCopy.join('\n')}`);
+  embed.setFooter(
+    `Requested by ${msg.author.username}`,
+    msg.author.displayAvatarURL
+  );
+  embed.setTimestamp(new Date());
+
+  return embed;
 };
 
 const removeDuplicates = (arr) => {
@@ -124,7 +143,7 @@ const getInCommonByCategory = async (args, msg, categoryID, categoryName) => {
       return isCoop;
     });
 
-    const output = getPrint(await commonGames, categoryName);
+    const output = getPrint(await commonGames, categoryName, msg);
     return output;
   });
 };
@@ -146,7 +165,8 @@ module.exports = {
 
         try {
           let gamesInCommon = await getIncommonGames(users);
-          res = getPrint(await gamesInCommon) || 'uh-oh, some issue...';
+          res =
+            getPrint(await gamesInCommon, null, msg) || 'uh-oh, some issue...';
         } catch (err) {
           res = `Invalid steam ID :3: (${err.message})`;
         }
