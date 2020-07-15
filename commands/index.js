@@ -5,4 +5,5 @@ module.exports = {
   Steam: require('./steam'),
   Dosh: require('./dosh'),
   Wiki: require('./wiki'),
+  Translator: require('./translator'),
 };
