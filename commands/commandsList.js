@@ -11,12 +11,13 @@ module.exports = {
       author: {
         name: 'ziggato 🐈',
       },
-      description: 'Use ``gato`` as prefix for all commands.',
+      description:
+        'Use ``gato`` as prefix for all commands. ``[]`` indicate with or without space inbetween. ``<>`` indicate a singular value.',
       fields: [
         {
           name: 'Giphy',
           value:
-            '``gif [phrase/word]`` - Translate text into gif\n``gif random``',
+            '``gif [phrase/word]`` - Translate text into gif\n``gif search [text]``\n``gif random``\n``gif random [text]``',
           inline: false,
         },
         {
