@@ -17,7 +17,7 @@ module.exports = {
         {
           name: 'Giphy',
           value:
-            '``gif [phrase/word]`` - Translate text into gif\n``gif search [text]``\n``gif random``\n``gif random [text]``',
+            '``gif [phrase/word]`` - translate text into gif\n``gif search [text]``\n``gif random``\n``gif random [text]``',
           inline: false,
         },
         {
@@ -28,7 +28,7 @@ module.exports = {
         {
           name: 'Steam - games in common between users',
           value:
-            '``steam incommon [steamIDs]``\n``steam coop [steamIDs]``\n``steam mp [steamIDs]``',
+            '``steam incommon [steamIDs]`` -all\n``steam coop [steamIDs]`` - all co-op\n``steam mp [steamIDs]`` -all multi-player',
           inline: false,
         },
         {

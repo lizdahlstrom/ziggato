@@ -36,7 +36,7 @@ module.exports = {
           }&api_key=${KEY}`
         );
         gif = await gif.json();
-        git = gif.data.url;
+        gif = gif.data.url;
         break;
       }
     }
