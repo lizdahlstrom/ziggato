@@ -11,7 +11,7 @@ const determineTarget = async (config) => {
   let text = config.text;
 
   if (target.length > 3 || target.length === 0) {
-    text = target + ' ' + text;
+    text = target + (text ? ' ' + text : '');
     console.log('text is', text);
     target = 'en';
   } else {
@@ -47,11 +47,12 @@ module.exports = {
   description: 'Translate',
   async execute(msg, args) {
     let output = 'no dice';
-    const target = args.shift();
-    const text = args.join(' ');
+    let target = args.shift();
+    let text = args.join(' ');
 
     try {
       let config = await determineTarget({ target, text });
+      text = config.text;
       output = await callTranslate(msg, config.target, config.text);
     } catch (err) {
       output = `Something is wrong with your command yo.`;
