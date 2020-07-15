@@ -60,7 +60,7 @@ const getPrint = (games, category, msg) => {
   const gamesCopy = games.map((a) => a.name);
   gamesCopy.sort();
 
-  embed.setColor(palette.mid3);
+  embed.setColor(palette.dark);
   embed.setAuthor(
     'Steam',
     'https://seeklogo.com/images/S/steam-logo-73274B19E3-seeklogo.com.png',

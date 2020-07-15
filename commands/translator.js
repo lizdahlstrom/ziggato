@@ -62,7 +62,7 @@ module.exports = {
       .setColor(palette.mid1)
       .setAuthor('Translator 🐈')
       .setTitle(output)
-      .setDescription('From: ' + text)
+      .setDescription(`From: *"${text}"*`)
       .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
       .setTimestamp(new Date());
 
