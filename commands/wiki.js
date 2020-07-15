@@ -4,24 +4,32 @@ const { palette } = require('../config.json');
 
 const callWiki = async (msg, args) => {
   const searchStr = args.join('%20');
-  const url = `https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=${searchStr}`;
+  const api = `https://en.wikipedia.org/w/api.php?format=json&action=query&titles=${searchStr}`;
+  const url = api + '&prop=extracts&exintro&explaintext&redirects=1';
+  const imageURL = api + '&prop=pageimages&pithumbsize=100';
 
-  let resultStr = null;
   const maxLength = 880;
   const embed = new Discord.MessageEmbed();
 
   let result = await fetch(url);
   result = await result.json();
-
   result = Object.values(result.query.pages)[0];
+
   const pageID = result.pageid;
 
   if (!pageID) throw new Error(`Nopes! Couldn't find that in da wiki 😿`);
 
+  let img = await fetch(imageURL);
+  img = await img.json();
+  img = img.query.pages[pageID]
+    ? img.query.pages[pageID].thumbnail.source
+    : null;
+  if (img) embed.setThumbnail(img);
+
   let title = result.title;
   let extract = result.extract;
 
-  resultStr =
+  const resultStr =
     extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) + '.';
 
   embed.setColor(palette.dark);
@@ -30,6 +38,7 @@ const callWiki = async (msg, args) => {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
     'https://en.wikipedia.org'
   );
+
   embed.setTitle(title);
   embed.setURL(`https://en.wikipedia.org/?curid=${pageID}`);
   embed.setDescription(resultStr);
