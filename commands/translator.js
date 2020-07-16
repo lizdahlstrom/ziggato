@@ -46,6 +46,8 @@ module.exports = {
   name: 'translate',
   description: 'Translate',
   async execute(msg, args) {
+    if (!args || args.length === 0) return;
+
     let output = 'no dice';
     let target = args.shift();
     let text = args.join(' ');

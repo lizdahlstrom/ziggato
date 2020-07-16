@@ -4,6 +4,7 @@ module.exports = {
   name: 'gif',
   description: 'Giphy',
   async execute(msg, args) {
+    if (!args || args.length === 0) return;
     const KEY = process.env.GIPHY_KEY;
 
     let gif;

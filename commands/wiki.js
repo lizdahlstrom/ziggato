@@ -13,7 +13,7 @@ const callWiki = async (msg, args) => {
   let search = await fetch(apiSearch);
   search = await search.json();
 
-  searchStr = search[1][0].replace(' ', '%20');
+  searchStr = search[1][0] ? search[1][0].replace(' ', '%20') : '';
 
   const query = api + `?format=json&action=query&titles=${searchStr}`;
   const url = query + '&prop=extracts&exintro&explaintext&redirects=1';
@@ -25,6 +25,7 @@ const callWiki = async (msg, args) => {
   // get excerpt
   let result = await fetch(url);
   result = await result.json();
+  if (!result.query) throw new Error(`Nopes! Couldn't find that in da wiki 😿`);
   result = Object.values(result.query.pages)[0];
 
   const pageID = result.pageid;
@@ -70,6 +71,8 @@ module.exports = {
   name: 'wiki',
   description: 'Wiki',
   async execute(msg, args) {
+    if (!args || args.length === 0) return;
+
     let output = '';
 
     try {
