@@ -38,6 +38,12 @@ module.exports = {
           inline: false,
         },
         {
+          name: 'Unit converter',
+          value:
+            '``units <unit-abbr> <target unit abbr> <amount>``\n``units list`` - lists all possible units\n``units list <unit abbr>`` - lists all possible units to convert to from given unit',
+          inline: false,
+        },
+        {
           name: 'Wiki',
           value: '``wiki [string]``',
           inline: false,

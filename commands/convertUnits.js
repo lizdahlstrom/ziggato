@@ -39,7 +39,6 @@ module.exports = {
         output = `${convert().possibilities().join(', ')}`;
       }
     } else if (args.length === 3) {
-      console.log('calling conversion trying!');
       const original = args[0],
         target = args[1],
         amount = args[2];
@@ -48,7 +47,6 @@ module.exports = {
         const originalDescr = convert().describe(original);
         const targetDescr = convert().describe(target);
         const result = convert(amount).from(original).to(target);
-        console.log(originalDescr, targetDescr);
 
         output = `${amount} ${
           amount > 1 ? originalDescr.plural : originalDescr.singular
@@ -61,8 +59,6 @@ module.exports = {
     } else {
       throw new Error('Missing arguments');
     }
-
-    console.log('output is', output);
 
     msg.channel.send(buildEmbed(output, msg.author.username));
   },
