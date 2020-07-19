@@ -28,7 +28,7 @@ module.exports = {
         {
           name: 'Jokes',
           value:
-            '``jokes`` - random joke\n``jokes dark`` - dark joke\n``jokes misc`` - miscellaneous joke\n``jokes prog`` - programming joke',
+            '``jokes`` - random joke\n``jokes dark`` - dark joke\n``jokes misc`` - miscellaneous joke\n``jokes prog`` - programming joke\n``jokes dad`` - dad joke',
           inline: false,
         },
         {

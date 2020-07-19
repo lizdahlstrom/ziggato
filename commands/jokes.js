@@ -24,6 +24,7 @@ module.exports = {
   description: 'Commands',
   async execute(msg, args) {
     let url = `https://sv443.net/jokeapi/v2/joke`;
+    let init = '';
 
     if (args && args.length > 0) {
       const category = args[0].toLowerCase();
@@ -33,22 +34,27 @@ module.exports = {
         url += '/Miscellaneous';
       } else if (category === 'prog') {
         url += '/Programming';
+      } else if (category === 'dad') {
+        console.log('category is', category);
+        url = `https://icanhazdadjoke.com/`;
+        init = { headers: { Accept: 'application/json' } };
       } else {
-        url += '/Any';
+        url += `/Any?contains=${category}`;
       }
     } else {
       url += '/Any';
     }
 
-    let apiRes = await fetch(url);
+    let apiRes = init === '' ? await fetch(url) : await fetch(url, init);
     apiRes = await apiRes.json();
 
-    if (apiRes.error) throw new Error('Error getting joke');
+    if (apiRes.error || apiRes.status > 200)
+      throw new Error('Error getting joke');
 
     let embed;
     if (apiRes.setup) {
       embed = buildEmbed(apiRes.setup, msg.author.username, apiRes.delivery);
-    } else {
+    } else if (apiRes.joke) {
       embed = buildEmbed(apiRes.joke);
     }
 
