@@ -28,7 +28,7 @@ module.exports = {
     if (args[0] === 'list') {
       if (args[1]) {
         try {
-          output = `${args[1]}can be converted to: ${convert()
+          output = `<${args[1]}> can be converted to: ${convert()
             .from(args[1])
             .possibilities()
             .join(', ')}`;
