@@ -6,4 +6,5 @@ module.exports = {
   Dosh: require('./dosh'),
   Wiki: require('./wiki'),
   Translator: require('./translator'),
+  UnitConverter: require('./convertUnits'),
 };
