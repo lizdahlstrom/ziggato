@@ -3,13 +3,18 @@ const Discord = require('discord.js');
 const { palette } = require('../config.json');
 
 const buildEmbed = (output, userName) => {
+  const maxLength = 2048;
   const embed = new Discord.MessageEmbed()
     .setColor(palette.mid1)
     .setAuthor('Lyrics 🐈')
     .setFooter(`Requested by ${userName}`)
     .setTimestamp(new Date())
-    .setDescription(output);
-
+    .setDescription(
+      output.length < 2048
+        ? output
+        : output.substring(0, (output + '.').lastIndexOf('\n', maxLength)) +
+            '...'
+    );
   return embed;
 };
 
@@ -34,7 +39,10 @@ module.exports = {
     apiRes = await apiRes.json();
 
     if (!apiRes.lyrics) return;
-    const lyrics = apiRes.lyrics.replace('\n', '');
+
+    let lyrics = apiRes.lyrics;
+    lyrics = lyrics.split('\n\n\n\n').join('\n\n');
+    lyrics = lyrics.split('\n\n\n').join('\n');
 
     const embed = buildEmbed(lyrics, msg.author.username);
     embed.setTitle(
