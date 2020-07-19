@@ -8,4 +8,5 @@ module.exports = {
   Translator: require('./translator'),
   UnitConverter: require('./convertUnits'),
   Jokes: require('./jokes'),
+  Lyrics: require('./lyrics'),
 };

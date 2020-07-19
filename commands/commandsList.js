@@ -32,6 +32,12 @@ module.exports = {
           inline: false,
         },
         {
+          name: 'Lyrics',
+          value:
+            '``lyrics [artist] / [track title]`` - displays lyrics if found',
+          inline: false,
+        },
+        {
           name: 'Steam - games in common between users',
           value:
             '``steam incommon [steamIDs]`` -all\n``steam coop [steamIDs]`` - all co-op\n``steam mp [steamIDs]`` -all multi-player',
