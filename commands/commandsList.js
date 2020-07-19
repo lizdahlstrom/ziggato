@@ -26,6 +26,12 @@ module.exports = {
           inline: false,
         },
         {
+          name: 'Jokes',
+          value:
+            '``jokes`` - random joke\n``jokes dark`` - dark joke\n``jokes misc`` - miscellaneous joke\n``jokes prog`` - programming joke',
+          inline: false,
+        },
+        {
           name: 'Steam - games in common between users',
           value:
             '``steam incommon [steamIDs]`` -all\n``steam coop [steamIDs]`` - all co-op\n``steam mp [steamIDs]`` -all multi-player',

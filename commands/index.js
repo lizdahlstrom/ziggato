@@ -7,4 +7,5 @@ module.exports = {
   Wiki: require('./wiki'),
   Translator: require('./translator'),
   UnitConverter: require('./convertUnits'),
+  Jokes: require('./jokes'),
 };
