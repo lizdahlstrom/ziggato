@@ -13,7 +13,7 @@ const buildEmbed = (output, userName, delivery = '') => {
     embed.setTitle(output);
   } else {
     embed.setTitle(output);
-    embed.setDescription(delivery + ' 😸');
+    embed.setDescription(delivery);
   }
 
   return embed;
