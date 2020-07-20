@@ -46,7 +46,10 @@ const callWiki = async (msg, args) => {
   let extract = result.extract;
 
   const excerpt =
-    extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) + '...';
+    extract.length >= maxLength
+      ? extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) +
+        '...'
+      : extract;
 
   embed.setColor(palette.dark);
   embed.setAuthor(

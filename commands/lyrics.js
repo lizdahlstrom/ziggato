@@ -43,6 +43,7 @@ module.exports = {
     let lyrics = apiRes.lyrics;
     lyrics = lyrics.split('\n\n\n\n').join('\n\n');
     lyrics = lyrics.split('\n\n\n').join('\n');
+    lyrics = lyrics.split(',\n\n').join('\n');
 
     const embed = buildEmbed(lyrics, msg.author.username);
     embed.setTitle(
