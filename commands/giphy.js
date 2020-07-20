@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const Discord = require('discord.js');
 
 module.exports = {
   name: 'gif',
@@ -13,7 +14,6 @@ module.exports = {
 
     switch (args[0]) {
       case 'random': {
-        console.log(argStr);
         gif = await fetch(
           `https://api.giphy.com/v1/gifs/random?api_key=${KEY}&tag=${argStr}`
         );
@@ -22,7 +22,6 @@ module.exports = {
         break;
       }
       case 'search': {
-        console.log(argStr);
         gif = await fetch(
           `https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${argStr}&limit=1`
         );
@@ -41,7 +40,14 @@ module.exports = {
         break;
       }
     }
+    const id = gif.split('-').pop();
+    const imgUrl = `https://media.giphy.com/media/${id}/giphy.gif`;
 
-    msg.channel.send(gif);
+    const embed = new Discord.MessageEmbed()
+      .setImage(imgUrl)
+      .attachFiles(['./assets/img/giphy_attribution_logo.png'])
+      .setThumbnail('attachment://giphy_attribution_logo.png');
+
+    msg.channel.send(embed);
   },
 };
