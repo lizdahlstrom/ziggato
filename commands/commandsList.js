@@ -12,11 +12,11 @@ module.exports = {
         name: 'ziggato 🐈',
       },
       description:
-        'Use ``gato`` as prefix for all commands. ``[]`` indicate optional values.\nExample: ``[ value1 | value2]`` indicates either ``value1`` or ``value2`` (but not both), or nothing.\n``<>`` indicate a mandatory value. ``<...>`` indicate optionally multiple values (but at least one).',
+        'Use ``gato`` as prefix for all commands. ``[]`` indicate optional values.\nExample: ``[ value1 | value2]`` indicates either ``value1`` or ``value2`` (but not both), or nothing.\n``<>`` indicate a mandatory value. ``...`` indicate optionally multiple values',
       fields: [
         {
           name: 'Giphy',
-          value: '``gif [random | search] <text...>``',
+          value: '``gif [random | search] <text>...``',
           inline: false,
         },
         {
@@ -37,13 +37,13 @@ module.exports = {
         },
         {
           name: 'Steam - games in common between users',
-          value: '``steam [incommon | coop | mp] <steamIDs...>``',
+          value: '``steam [incommon | coop | mp] <steamIDs>...``',
           inline: false,
         },
         {
           name: 'Translate',
           value:
-            '``translate [language-code] <text...>`` - default target language is english (en)',
+            '``translate [language-code] <text>...`` - default target language is english (en)',
           inline: false,
         },
         {
@@ -54,7 +54,7 @@ module.exports = {
         },
         {
           name: 'Wiki',
-          value: '``wiki <text...>``',
+          value: '``wiki <text>...``',
           inline: false,
         },
       ],
