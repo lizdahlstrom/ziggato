@@ -12,14 +12,12 @@ const determineTarget = async (config) => {
 
   if (target.length > 3 || target.length === 0) {
     text = target + (text ? ' ' + text : '');
-    console.log('text is', text);
     target = 'en';
   } else {
     let [languages] = await translate.getLanguages();
     languages = languages.map((lang) => lang.code);
     if (!languages.includes(target)) {
       text = target + ' ' + text;
-      console.log('text is', text);
       target = 'en';
     }
   }
@@ -33,9 +31,7 @@ const callTranslate = async (msg, target, text) => {
   let [translations] = await translate.translate(text, target);
 
   translations = Array.isArray(translations) ? translations : [translations];
-  console.log('Translations:');
   translations.forEach((translation, i) => {
-    console.log(`${text[i]} => (${target}) ${translation}`);
     result += translation;
   });
 
@@ -58,7 +54,6 @@ module.exports = {
       output = await callTranslate(msg, config.target, config.text);
     } catch (err) {
       output = `Something is wrong with your command yo.`;
-      console.log(err.message);
     }
 
     const embed = new Discord.MessageEmbed()

@@ -35,7 +35,6 @@ module.exports = {
       } else if (category === 'prog') {
         url += '/Programming';
       } else if (category === 'dad') {
-        console.log('category is', category);
         url = `https://icanhazdadjoke.com/`;
         init = { headers: { Accept: 'application/json' } };
       } else {
