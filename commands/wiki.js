@@ -2,6 +2,24 @@ const fetch = require('node-fetch');
 const Discord = require('discord.js');
 const { palette } = require('../config.json');
 
+const buildEmbed = (title, pageID, excerpt, msg) => {
+  return new Discord.MessageEmbed()
+    .setColor(palette.dark)
+    .setAuthor(
+      'Wikipedia',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
+      'https://en.wikipedia.org'
+    )
+    .setTitle(title)
+    .setURL(`https://en.wikipedia.org/?curid=${pageID}`)
+    .setDescription(excerpt)
+    .setFooter(
+      `Requested by ${msg.author.username}`,
+      msg.author.displayAvatarURL
+    )
+    .setTimestamp(new Date());
+};
+
 const callWiki = async (msg, args) => {
   let searchStr = args.join('%20');
   const api = 'https://en.wikipedia.org/w/api.php';
@@ -20,7 +38,6 @@ const callWiki = async (msg, args) => {
   const imageURL = query + '&prop=pageimages&pithumbsize=100';
 
   const maxLength = 880;
-  const embed = new Discord.MessageEmbed();
 
   // get excerpt
   let result = await fetch(url);
@@ -50,22 +67,8 @@ const callWiki = async (msg, args) => {
       ? extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) +
         '...'
       : extract;
-
-  embed.setColor(palette.dark);
-  embed.setAuthor(
-    'Wikipedia',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
-    'https://en.wikipedia.org'
-  );
-
-  embed.setTitle(title);
-  embed.setURL(`https://en.wikipedia.org/?curid=${pageID}`);
-  embed.setDescription(excerpt);
-  embed.setFooter(
-    `Requested by ${msg.author.username}`,
-    msg.author.displayAvatarURL
-  );
-  embed.setTimestamp(new Date());
+  
+  const embed = buildEmbed(title, pageID, excerpt, msg);
 
   return embed;
 };

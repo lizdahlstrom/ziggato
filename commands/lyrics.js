@@ -2,9 +2,9 @@ const fetch = require('node-fetch');
 const Discord = require('discord.js');
 const { palette } = require('../config.json');
 
-const buildEmbed = (output, userName) => {
+const buildEmbed = (output, userName, track, artist) => {
   const maxLength = 2048;
-  const embed = new Discord.MessageEmbed()
+  return new Discord.MessageEmbed()
     .setColor(palette.mid1)
     .setAuthor('Lyrics 🐈')
     .setFooter(`Requested by ${userName}`)
@@ -14,12 +14,26 @@ const buildEmbed = (output, userName) => {
         ? output
         : output.substring(0, (output + '.').lastIndexOf('\n', maxLength)) +
             '...'
+    )
+    .setTitle(
+      `${firstLetterUpperCase(track.join(' '))} by ${firstLetterUpperCase(
+        artist.join(' ')
+      )}`
     );
-  return embed;
 };
 
 const firstLetterUpperCase = (str) => {
   return str[0].toUpperCase() + str.slice(1);
+};
+
+const fetchLyrics = async (artist, track) => {
+  const url = `https://api.lyrics.ovh/v1/${artist.join('%20')}/${track.join(
+    '%20'
+  )}`;
+
+  let apiRes = await fetch(url);
+  apiRes = await apiRes.json();
+  return apiRes;
 };
 
 module.exports = {
@@ -31,26 +45,18 @@ module.exports = {
 
     const artist = args.slice(0, delimiterIndex);
     const track = args.slice(delimiterIndex + 1, args.length);
-    const url = `https://api.lyrics.ovh/v1/${artist.join('%20')}/${track.join(
-      '%20'
-    )}`;
 
-    let apiRes = await fetch(url);
-    apiRes = await apiRes.json();
+    let apiRes = await fetchLyrics(artist, track);
 
     if (!apiRes.lyrics) return;
 
     let lyrics = apiRes.lyrics;
+    // fix excessive linebreaks
     lyrics = lyrics.split('\n\n\n\n').join('\n\n');
     lyrics = lyrics.split('\n\n\n').join('\n');
     lyrics = lyrics.split(',\n\n').join('\n');
 
-    const embed = buildEmbed(lyrics, msg.author.username);
-    embed.setTitle(
-      `${firstLetterUpperCase(track.join(' '))} by ${firstLetterUpperCase(
-        artist.join(' ')
-      )}`
-    );
+    const embed = buildEmbed(lyrics, msg.author.username, track, artist);
 
     msg.channel.send(embed);
   },

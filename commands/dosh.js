@@ -9,9 +9,7 @@ module.exports = {
     if (args.length < 3) throw new Error('Missing arguments');
 
     const abbrReg = new RegExp('^[A-Za-z]{3}$');
-    const numberReg = new RegExp('^\\d+$');
     const amount = Number(args[2]);
-    const embed = new Discord.MessageEmbed();
 
     if (!abbrReg.test(args[0]) || !abbrReg.test(args[1]))
       throw new Error('Input can not be a currency');
@@ -33,19 +31,17 @@ module.exports = {
       result = `${args[2]} ${args[0].toUpperCase()} = ${(
         Number(currency) * amount
       ).toFixed(2)} ${args[1].toUpperCase()} `;
-
-      embed.setColor(palette.mid1);
-      embed.setTitle(result);
-      embed.setDescription('Dosh converter 🐈');
-      embed.setFooter(
-        `Requested by ${msg.author.username}`,
-        msg.author.authorURL
-      );
-      embed.setTimestamp(new Date());
     } catch (err) {
       result += `: ${err}`;
     }
 
-    msg.channel.send(result ? embed : 'Something went wrong');
+    const embed = new Discord.MessageEmbed()
+      .setColor(palette.mid1)
+      .setTitle(result)
+      .setDescription('Dosh converter 🐈')
+      .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
+      .setTimestamp(new Date());
+
+    msg.channel.send(result ? embed : 'Something went wrong:');
   },
 };
