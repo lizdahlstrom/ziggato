@@ -57,8 +57,6 @@ const callWiki = async (msg, args) => {
       ? img.query.pages[pageID].thumbnail.source
       : null;
 
-  if (img) embed.setThumbnail(img);
-
   let title = result.title;
   let extract = result.extract;
 
@@ -67,8 +65,10 @@ const callWiki = async (msg, args) => {
       ? extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) +
         '...'
       : extract;
-  
+
   const embed = buildEmbed(title, pageID, excerpt, msg);
+
+  if (img) embed.setThumbnail(img);
 
   return embed;
 };
