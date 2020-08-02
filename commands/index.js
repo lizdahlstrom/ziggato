@@ -9,4 +9,5 @@ module.exports = {
   UnitConverter: require('./convertUnits'),
   Jokes: require('./jokes'),
   Lyrics: require('./lyrics'),
+  WordFind: require('./wordFind'),
 };

@@ -57,6 +57,11 @@ module.exports = {
           value: '``wiki <text>...``',
           inline: false,
         },
+        {
+          name: 'Word-find',
+          value: '``wordfind [syn] <word>`` - Get synonyms',
+          inline: false,
+        },
       ],
       footer: {
         text: `Requested by ${msg.author.username}`,
