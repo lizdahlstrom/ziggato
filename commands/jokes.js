@@ -54,7 +54,7 @@ module.exports = {
     if (apiRes.setup) {
       embed = buildEmbed(apiRes.setup, msg.author.username, apiRes.delivery);
     } else if (apiRes.joke) {
-      embed = buildEmbed(apiRes.joke);
+      embed = buildEmbed(apiRes.joke, msg.author.userName);
     } else {
       throw new Error('error fetching joke from API');
     }

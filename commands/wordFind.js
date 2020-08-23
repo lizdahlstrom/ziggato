@@ -3,8 +3,18 @@ const Discord = require('discord.js');
 const { palette } = require('../config.json');
 const api = 'https://api.datamuse.com/words';
 
-const getSynonyms = async (word) => {
-  const url = `${api}?rel_syn=${word}`;
+const buildEmbed = (msg, word, result) => {
+  return new Discord.MessageEmbed()
+    .setColor(palette.mid1)
+    .setAuthor('Word-find 🐈')
+    .setTitle(result)
+    .setDescription(`From *"${word}"*`)
+    .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
+    .setTimestamp(new Date());
+};
+
+const getSynonyms = async (queryType, word) => {
+  const url = `${api}?rel_${queryType}=${word}`;
 
   let res = await fetch(url);
   res = await res.json();
@@ -18,13 +28,17 @@ module.exports = {
   async execute(msg, args) {
     if (args.length < 2) throw new Error('Missing arguments');
 
+    const query = args[0];
+    const word = args[1];
     let result = '';
     const maxLength = 110;
 
-    if (args[0] === 'syn') {
-      const res = await getSynonyms(args[1]);
+    if (query === 'syn' || query === 'rhy') {
+      const res = await getSynonyms(query, word);
       result = res.map((word) => `• ${word.word}`);
       result = result.join('\n');
+    } else {
+      throw new Error('Invalid query, must be "syn" or "rhy"');
     }
 
     result =
@@ -32,14 +46,6 @@ module.exports = {
         ? result.substring(0, (result + '\n').lastIndexOf('\n', maxLength))
         : result;
 
-    const embed = new Discord.MessageEmbed()
-      .setColor(palette.mid1)
-      .setAuthor('Word-find 🐈')
-      .setTitle(result)
-      .setDescription(`From *"${args[1]}"*`)
-      .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
-      .setTimestamp(new Date());
-
-    if (result) msg.channel.send(embed);
+    if (result) msg.channel.send(buildEmbed(msg, word, result));
   },
 };

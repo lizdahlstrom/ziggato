@@ -59,7 +59,8 @@ module.exports = {
         },
         {
           name: 'Word-find',
-          value: '``wordfind [syn] <word>`` - Get synonyms',
+          value:
+            '``wordfind [syn | rhy] <word>`` - Get synonyms or rhymes of a word',
           inline: false,
         },
       ],
