@@ -26,10 +26,10 @@ module.exports = {
   name: 'wordfind',
   description: 'Word-find',
   async execute(msg, args) {
-    if (args.length < 2) throw new Error('Missing arguments');
+    if (args.length < 1) throw new Error('Missing arguments');
 
-    const query = args[0];
-    const word = args[1];
+    const query = args.length === 2 ? args[0] : 'syn';
+    const word = args.length === 2 ? args[1] : args[0];
     let result = '';
     const maxLength = 110;
 

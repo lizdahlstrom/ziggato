@@ -37,7 +37,7 @@ module.exports = {
         },
         {
           name: 'Steam - games in common between users',
-          value: '``steam [incommon | coop | mp] <steamIDs>...``',
+          value: '``steam [incommon | coop | mp | count] <steamIDs>...``',
           inline: false,
         },
         {

@@ -81,6 +81,27 @@ const getPrint = (games, category, msg) => {
   return embed;
 };
 
+const getCountPrint = (count, msg, username) => {
+  const embed = new Discord.MessageEmbed();
+
+  embed.setColor(palette.dark);
+  embed.setAuthor(
+    'Steam',
+    'https://seeklogo.com/images/S/steam-logo-73274B19E3-seeklogo.com.png',
+    'https://store.steampowered.com/'
+  );
+  embed.setTitle(
+    `${username} has ${count} games. ${count === 0 ? '😿' : '😸'}`
+  );
+  embed.setFooter(
+    `Requested by ${msg.author.username}`,
+    msg.author.displayAvatarURL
+  );
+  embed.setTimestamp(new Date());
+
+  return embed;
+};
+
 const removeDuplicates = (arr) => {
   return [...new Set(arr)];
 };
@@ -148,6 +169,11 @@ const getInCommonByCategory = async (args, msg, categoryID, categoryName) => {
   });
 };
 
+const getGameCount = async (args) => {
+  const games = await getGames(args[1]);
+  return games ? games.length : 0;
+};
+
 module.exports = {
   name: 'steam',
   description: 'Steam',
@@ -181,6 +207,11 @@ module.exports = {
       }
       case 'mp': {
         await getInCommonByCategory(args, msg, 1, 'multi-player');
+        break;
+      }
+      case 'count': {
+        const count = await getGameCount(args);
+        msg.channel.send(getCountPrint(count, msg, args[1]));
         break;
       }
     }
