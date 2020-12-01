@@ -3,9 +3,9 @@ const Discord = require('discord.js');
 
 const buildEmbed = (imgUrl) => {
   return new Discord.MessageEmbed()
-    .setImage(imgUrl)
-    .attachFiles(['./assets/img/giphy_attribution_logo.png'])
-    .setThumbnail('attachment://giphy_attribution_logo.png');
+      .setImage(imgUrl)
+      .attachFiles(['./assets/img/giphy_attribution_logo.png'])
+      .setThumbnail('attachment://giphy_attribution_logo.png');
 };
 
 const fetchGifUrl = async (url) => {
@@ -27,17 +27,17 @@ module.exports = {
 
     if (args[0] === 'random') {
       gif = await fetchGifUrl(
-        `https://api.giphy.com/v1/gifs/random?api_key=${KEY}&tag=${argStr}`
+          `https://api.giphy.com/v1/gifs/random?api_key=${KEY}&tag=${argStr}`,
       );
     } else if (args[0] === 'search') {
       gif = await fetchGifUrl(
-        `https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${argStr}&limit=1`
+          `https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${argStr}&limit=1`,
       );
     } else {
       gif = await fetchGifUrl(
-        `https://api.giphy.com/v1/gifs/translate?s=${
-          command + '+' + argStr
-        }&api_key=${KEY}`
+          `https://api.giphy.com/v1/gifs/translate?s=${
+            command + '+' + argStr
+          }&api_key=${KEY}`,
       );
     }
 

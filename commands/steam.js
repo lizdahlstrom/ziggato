@@ -1,7 +1,7 @@
 const KEY = process.env.STEAM_KEY;
 const fetch = require('node-fetch');
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
+const {palette} = require('../config.json');
 
 const getGames = async (userId) => {
   // regex if userId is a steamID or a .. other thing
@@ -37,7 +37,7 @@ const getUserID = async (vanityURL) => {
 };
 
 const getAppDetails = async (app) => {
-  let url = `https://store.steampowered.com/api/appdetails?appids=${app.appid}`;
+  const url = `https://store.steampowered.com/api/appdetails?appids=${app.appid}`;
   let res = '';
 
   try {
@@ -46,9 +46,9 @@ const getAppDetails = async (app) => {
     res = res[app.appid].data;
   } catch (err) {
     throw new Error(
-      'Could not fetch details of ' +
+        'Could not fetch details of ' +
         app.appid +
-        ' from api. Because Steam API sucks. Yeah.'
+        ' from api. Because Steam API sucks. Yeah.',
     );
   }
 
@@ -62,19 +62,19 @@ const getPrint = (games, category, msg) => {
 
   embed.setColor(palette.dark);
   embed.setAuthor(
-    'Steam',
-    'https://seeklogo.com/images/S/steam-logo-73274B19E3-seeklogo.com.png',
-    'https://store.steampowered.com/'
+      'Steam',
+      'https://seeklogo.com/images/S/steam-logo-73274B19E3-seeklogo.com.png',
+      'https://store.steampowered.com/',
   );
   embed.setTitle(
-    `${gamesCopy.length} ${category ? category + ' ' : ''}games in common ${
+      `${gamesCopy.length} ${category ? category + ' ' : ''}games in common ${
       gamesCopy.length === 0 ? '😿' : '😸'
-    }`
+      }`,
   );
   embed.setDescription(`${gamesCopy.join('\n')}`);
   embed.setFooter(
-    `Requested by ${msg.author.username}`,
-    msg.author.displayAvatarURL
+      `Requested by ${msg.author.username}`,
+      msg.author.displayAvatarURL,
   );
   embed.setTimestamp(new Date());
 
@@ -86,16 +86,16 @@ const getCountPrint = (count, msg, username) => {
 
   embed.setColor(palette.dark);
   embed.setAuthor(
-    'Steam',
-    'https://seeklogo.com/images/S/steam-logo-73274B19E3-seeklogo.com.png',
-    'https://store.steampowered.com/'
+      'Steam',
+      'https://seeklogo.com/images/S/steam-logo-73274B19E3-seeklogo.com.png',
+      'https://store.steampowered.com/',
   );
   embed.setTitle(
-    `${username} has ${count} games. ${count === 0 ? '😿' : '😸'}`
+      `${username} has ${count} games. ${count === 0 ? '😿' : '😸'}`,
   );
   embed.setFooter(
-    `Requested by ${msg.author.username}`,
-    msg.author.displayAvatarURL
+      `Requested by ${msg.author.username}`,
+      msg.author.displayAvatarURL,
   );
   embed.setTimestamp(new Date());
 
@@ -118,7 +118,7 @@ const getIncommonGames = async (args) => {
 
   for (let i = 1; i < data.length; i++) {
     gamesInCommon = gamesInCommon.filter((g) =>
-      data[i].some(({ appid }) => g.appid === appid)
+      data[i].some(({appid}) => g.appid === appid),
     );
   }
 
@@ -190,7 +190,7 @@ module.exports = {
         const users = removeDuplicates(args);
 
         try {
-          let gamesInCommon = await getIncommonGames(users);
+          const gamesInCommon = await getIncommonGames(users);
           res =
             getPrint(await gamesInCommon, null, msg) || 'uh-oh, some issue...';
         } catch (err) {

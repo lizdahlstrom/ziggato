@@ -10,4 +10,5 @@ module.exports = {
   Jokes: require('./jokes'),
   Lyrics: require('./lyrics'),
   WordFind: require('./wordFind'),
+  Watch2Gether: require('./watch2gether'),
 };

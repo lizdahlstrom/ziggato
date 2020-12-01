@@ -1,18 +1,22 @@
+// eslint-disable-next-line no-unused-vars
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
+const {palette} = require('../config.json');
 
 module.exports = {
   name: 'commands',
   description: 'Commands',
   execute(msg, args) {
-    let embed = {
+    const embed = {
       color: palette.light,
       title: 'Commands',
       author: {
         name: 'ziggato 🐈',
       },
       description:
-        'Use ``gato`` as prefix for all commands. ``[]`` indicate optional values.\nExample: ``[ value1 | value2]`` indicates either ``value1`` or ``value2`` (but not both), or nothing.\n``<>`` indicate a mandatory value. ``...`` indicate optionally multiple values',
+        'Use ``gato`` as prefix for all commands. ``[]`` indicate optional ' +
+        'values.\nExample: ``[ value1 | value2]`` indicates either ``value1``' +
+        ' or ``value2`` (but not both), or nothing.\n``<>`` indicate a ' +
+        'mandatory value. ``...`` indicate optionally multiple values',
       fields: [
         {
           name: 'Giphy',
@@ -43,13 +47,21 @@ module.exports = {
         {
           name: 'Translate',
           value:
-            '``translate [language-code] <text>...`` - default target language is english (en)',
+            '``translate [language-code] <text>...`` - default target ' +
+            'language is english (en)',
           inline: false,
         },
         {
           name: 'Unit converter',
           value:
-            '``units <unit-abbr> <target unit abbr> <amount>``\n``units list`` - lists all possible units\n``units list [unit abbr]`` - lists all possible units to convert to from given unit',
+            '``units <unit-abbr> <target unit abbr> <amount>``\n``units ' +
+            'list`` - lists all possible units\n``units list [unit abbr]`` ' +
+            '- lists all possible units to convert to from given unit',
+          inline: false,
+        },
+        {
+          name: 'Watch2Gether',
+          value: '``watch [url]`` - open a Watch2Gether room',
           inline: false,
         },
         {
@@ -60,7 +72,8 @@ module.exports = {
         {
           name: 'Word-find',
           value:
-            '``wordfind [syn | rhy] <word>`` - Get synonyms or rhymes of a word',
+            '``wordfind [syn | rhy] <word>`` - Get synonyms or rhymes of a ' +
+            ' word',
           inline: false,
         },
       ],
@@ -70,6 +83,6 @@ module.exports = {
       timestamp: new Date(),
     };
 
-    msg.channel.send({ embed });
+    msg.channel.send({embed});
   },
 };

@@ -1,25 +1,25 @@
 const fetch = require('node-fetch');
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
+const {palette} = require('../config.json');
 
 const buildEmbed = (output, userName, track, artist) => {
   const maxLength = 2048;
   return new Discord.MessageEmbed()
-    .setColor(palette.mid1)
-    .setAuthor('Lyrics 🐈')
-    .setFooter(`Requested by ${userName}`)
-    .setTimestamp(new Date())
-    .setDescription(
-      output.length < 2048
-        ? output
-        : output.substring(0, (output + '.').lastIndexOf('\n', maxLength)) +
-            '...'
-    )
-    .setTitle(
-      `${firstLetterUpperCase(track.join(' '))} by ${firstLetterUpperCase(
-        artist.join(' ')
-      )}`
-    );
+      .setColor(palette.mid1)
+      .setAuthor('Lyrics 🐈')
+      .setFooter(`Requested by ${userName}`)
+      .setTimestamp(new Date())
+      .setDescription(
+      output.length < 2048 ?
+        output :
+        output.substring(0, (output + '.').lastIndexOf('\n', maxLength)) +
+            '...',
+      )
+      .setTitle(
+          `${firstLetterUpperCase(track.join(' '))} by ${firstLetterUpperCase(
+              artist.join(' '),
+          )}`,
+      );
 };
 
 const firstLetterUpperCase = (str) => {
@@ -28,7 +28,7 @@ const firstLetterUpperCase = (str) => {
 
 const fetchLyrics = async (artist, track) => {
   const url = `https://api.lyrics.ovh/v1/${artist.join('%20')}/${track.join(
-    '%20'
+      '%20',
   )}`;
 
   let apiRes = await fetch(url);
@@ -46,7 +46,7 @@ module.exports = {
     const artist = args.slice(0, delimiterIndex);
     const track = args.slice(delimiterIndex + 1, args.length);
 
-    let apiRes = await fetchLyrics(artist, track);
+    const apiRes = await fetchLyrics(artist, track);
 
     if (!apiRes.lyrics) return;
 

@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
+const {palette} = require('../config.json');
 
 module.exports = {
   name: 'dosh',
@@ -11,13 +11,15 @@ module.exports = {
     const abbrReg = new RegExp('^[A-Za-z]{3}$');
     const amount = Number(args[2]);
 
-    if (!abbrReg.test(args[0]) || !abbrReg.test(args[1]))
+    if (!abbrReg.test(args[0]) || !abbrReg.test(args[1])) {
       throw new Error('Input can not be a currency');
+    }
 
-    if (isNaN(amount))
+    if (isNaN(amount)) {
       throw new Error(
-        `Wrong number input: ${args[2]}, typeof: ${typeof args[2]}`
+          `Wrong number input: ${args[2]}, typeof: ${typeof args[2]}`,
       );
+    }
 
     let result = null;
 
@@ -26,7 +28,7 @@ module.exports = {
       let res = await fetch(url);
       res = await res.json();
 
-      let currency = res.rates[args[1].toUpperCase()];
+      const currency = res.rates[args[1].toUpperCase()];
 
       result = `${args[2]} ${args[0].toUpperCase()} = ${(
         Number(currency) * amount
@@ -36,11 +38,11 @@ module.exports = {
     }
 
     const embed = new Discord.MessageEmbed()
-      .setColor(palette.mid1)
-      .setTitle(result)
-      .setDescription('Dosh converter 🐈')
-      .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
-      .setTimestamp(new Date());
+        .setColor(palette.mid1)
+        .setTitle(result)
+        .setDescription('Dosh converter 🐈')
+        .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
+        .setTimestamp(new Date());
 
     msg.channel.send(result ? embed : 'Something went wrong:');
   },

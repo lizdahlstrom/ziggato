@@ -1,16 +1,16 @@
 const fetch = require('node-fetch');
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
+const {palette} = require('../config.json');
 const api = 'https://api.datamuse.com/words';
 
 const buildEmbed = (msg, word, result) => {
   return new Discord.MessageEmbed()
-    .setColor(palette.mid1)
-    .setAuthor('Word-find 🐈')
-    .setTitle(result)
-    .setDescription(`From *"${word}"*`)
-    .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
-    .setTimestamp(new Date());
+      .setColor(palette.mid1)
+      .setAuthor('Word-find 🐈')
+      .setTitle(result)
+      .setDescription(`From *"${word}"*`)
+      .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
+      .setTimestamp(new Date());
 };
 
 const getSynonyms = async (queryType, word) => {
@@ -42,9 +42,9 @@ module.exports = {
     }
 
     result =
-      result.length >= maxLength
-        ? result.substring(0, (result + '\n').lastIndexOf('\n', maxLength))
-        : result;
+      result.length >= maxLength ?
+        result.substring(0, (result + '\n').lastIndexOf('\n', maxLength)) :
+        result;
 
     if (result) msg.channel.send(buildEmbed(msg, word, result));
   },

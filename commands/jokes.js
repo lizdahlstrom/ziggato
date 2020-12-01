@@ -1,13 +1,13 @@
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
+const {palette} = require('../config.json');
 const fetch = require('node-fetch');
 
 const buildEmbed = (output, userName, delivery = '') => {
   const embed = new Discord.MessageEmbed()
-    .setColor(palette.mid1)
-    .setAuthor('Jokez 🐈')
-    .setFooter(`Requested by ${userName}`)
-    .setTimestamp(new Date());
+      .setColor(palette.mid1)
+      .setAuthor('Jokez 🐈')
+      .setFooter(`Requested by ${userName}`)
+      .setTimestamp(new Date());
 
   if (delivery === '') {
     embed.setTitle(output);
@@ -36,7 +36,7 @@ module.exports = {
         url += '/Programming';
       } else if (category === 'dad') {
         url = `https://icanhazdadjoke.com/`;
-        init = { headers: { Accept: 'application/json' } };
+        init = {headers: {Accept: 'application/json'}};
       } else {
         url += `/Any?contains=${category}`;
       }
@@ -47,8 +47,9 @@ module.exports = {
     let apiRes = init === '' ? await fetch(url) : await fetch(url, init);
     apiRes = await apiRes.json();
 
-    if (apiRes.error || apiRes.status > 200)
+    if (apiRes.error || apiRes.status > 200) {
       throw new Error('Error getting joke');
+    }
 
     let embed;
     if (apiRes.setup) {

@@ -1,13 +1,13 @@
 const convert = require('convert-units');
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
+const {palette} = require('../config.json');
 
 const buildEmbed = (output, userName) => {
   const embed = new Discord.MessageEmbed()
-    .setColor(palette.mid1)
-    .setAuthor('Unit converter 🐈')
-    .setFooter(`Requested by ${userName}`)
-    .setTimestamp(new Date());
+      .setColor(palette.mid1)
+      .setAuthor('Unit converter 🐈')
+      .setFooter(`Requested by ${userName}`)
+      .setTimestamp(new Date());
 
   if (output.length >= 250) {
     embed.setTitle('Possible conversions');
@@ -29,9 +29,9 @@ module.exports = {
       if (args[1]) {
         try {
           output = `<${args[1]}> can be converted to: ${convert()
-            .from(args[1])
-            .possibilities()
-            .join(', ')}`;
+              .from(args[1])
+              .possibilities()
+              .join(', ')}`;
         } catch (err) {
           throw new Error('Invalid conversion');
         }
@@ -39,9 +39,9 @@ module.exports = {
         output = `${convert().possibilities().join(', ')}`;
       }
     } else if (args.length === 3) {
-      const original = args[0],
-        target = args[1],
-        amount = args[2];
+      const original = args[0];
+      const target = args[1];
+      const amount = args[2];
 
       try {
         const originalDescr = convert().describe(original);

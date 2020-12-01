@@ -1,23 +1,23 @@
 const fetch = require('node-fetch');
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
+const {palette} = require('../config.json');
 
 const buildEmbed = (title, pageID, excerpt, msg) => {
   return new Discord.MessageEmbed()
-    .setColor(palette.dark)
-    .setAuthor(
-      'Wikipedia',
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
-      'https://en.wikipedia.org'
-    )
-    .setTitle(title)
-    .setURL(`https://en.wikipedia.org/?curid=${pageID}`)
-    .setDescription(excerpt)
-    .setFooter(
-      `Requested by ${msg.author.username}`,
-      msg.author.displayAvatarURL
-    )
-    .setTimestamp(new Date());
+      .setColor(palette.dark)
+      .setAuthor(
+          'Wikipedia',
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
+          'https://en.wikipedia.org',
+      )
+      .setTitle(title)
+      .setURL(`https://en.wikipedia.org/?curid=${pageID}`)
+      .setDescription(excerpt)
+      .setFooter(
+          `Requested by ${msg.author.username}`,
+          msg.author.displayAvatarURL,
+      )
+      .setTimestamp(new Date());
 };
 
 const callWiki = async (msg, args) => {
@@ -53,18 +53,18 @@ const callWiki = async (msg, args) => {
   let img = await fetch(imageURL);
   img = await img.json();
   img =
-    img.query.pages[pageID] && img.query.pages[pageID].thumbnail
-      ? img.query.pages[pageID].thumbnail.source
-      : null;
+    img.query.pages[pageID] && img.query.pages[pageID].thumbnail ?
+      img.query.pages[pageID].thumbnail.source :
+      null;
 
-  let title = result.title;
-  let extract = result.extract;
+  const title = result.title;
+  const extract = result.extract;
 
   const excerpt =
-    extract.length >= maxLength
-      ? extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) +
-        '...'
-      : extract;
+    extract.length >= maxLength ?
+      extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) +
+        '...' :
+      extract;
 
   const embed = buildEmbed(title, pageID, excerpt, msg);
 

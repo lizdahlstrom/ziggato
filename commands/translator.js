@@ -1,10 +1,9 @@
-const fetch = require('node-fetch');
 const Discord = require('discord.js');
-const { palette } = require('../config.json');
-const { Translate } = require('@google-cloud/translate').v2;
+const {palette} = require('../config.json');
+const {Translate} = require('@google-cloud/translate').v2;
 
 // Creates a client
-const translate = new Translate({ projectId: 'ziggato' });
+const translate = new Translate({projectId: 'ziggato'});
 
 const determineTarget = async (config) => {
   let target = config.target;
@@ -22,7 +21,7 @@ const determineTarget = async (config) => {
     }
   }
 
-  return { target, text };
+  return {target, text};
 };
 
 const callTranslate = async (msg, target, text) => {
@@ -45,11 +44,11 @@ module.exports = {
     if (!args || args.length === 0) return;
 
     let output = 'no dice';
-    let target = args.shift();
+    const target = args.shift();
     let text = args.join(' ');
 
     try {
-      let config = await determineTarget({ target, text });
+      const config = await determineTarget({target, text});
       text = config.text;
       output = await callTranslate(msg, config.target, config.text);
     } catch (err) {
@@ -57,12 +56,12 @@ module.exports = {
     }
 
     const embed = new Discord.MessageEmbed()
-      .setColor(palette.mid1)
-      .setAuthor('Translator 🐈')
-      .setTitle(output)
-      .setDescription(`From: *"${text}"*`)
-      .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
-      .setTimestamp(new Date());
+        .setColor(palette.mid1)
+        .setAuthor('Translator 🐈')
+        .setTitle(output)
+        .setDescription(`From: *"${text}"*`)
+        .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
+        .setTimestamp(new Date());
 
     msg.channel.send(embed);
   },
