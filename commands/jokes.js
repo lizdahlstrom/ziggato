@@ -1,23 +1,5 @@
-const Discord = require('discord.js');
-const {palette} = require('../config.json');
 const fetch = require('node-fetch');
-
-const buildEmbed = (output, userName, delivery = '') => {
-  const embed = new Discord.MessageEmbed()
-      .setColor(palette.mid1)
-      .setAuthor('Jokez 🐈')
-      .setFooter(`Requested by ${userName}`)
-      .setTimestamp(new Date());
-
-  if (delivery === '') {
-    embed.setTitle(output);
-  } else {
-    embed.setTitle(output);
-    embed.setDescription(delivery);
-  }
-
-  return embed;
-};
+const embedBuilder = require('./helpers/embedBuilder.js');
 
 module.exports = {
   name: 'jokes',
@@ -53,9 +35,11 @@ module.exports = {
 
     let embed;
     if (apiRes.setup) {
-      embed = buildEmbed(apiRes.setup, msg.author.username, apiRes.delivery);
+      embed = embedBuilder.buildEmbed('Jokez 🐈', apiRes.setup,
+          msg.author.username, apiRes.delivery);
     } else if (apiRes.joke) {
-      embed = buildEmbed(apiRes.joke, msg.author.username);
+      embed = embedBuilder.buildEmbed('Jokez 🐈', apiRes.joke,
+          msg.author.username);
     } else {
       throw new Error('error fetching joke from API');
     }

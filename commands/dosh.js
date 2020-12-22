@@ -1,6 +1,5 @@
 const fetch = require('node-fetch');
-const Discord = require('discord.js');
-const {palette} = require('../config.json');
+const embedBuilder = require('./helpers/embedBuilder.js');
 
 module.exports = {
   name: 'dosh',
@@ -37,12 +36,8 @@ module.exports = {
       result += `: ${err}`;
     }
 
-    const embed = new Discord.MessageEmbed()
-        .setColor(palette.mid1)
-        .setTitle(result)
-        .setDescription('Dosh converter 🐈')
-        .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
-        .setTimestamp(new Date());
+    const embed = embedBuilder.buildEmbed('Dosh converter 🐈', result,
+        msg.author.username);
 
     msg.channel.send(result ? embed : 'Something went wrong:');
   },

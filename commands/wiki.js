@@ -1,25 +1,6 @@
 const fetch = require('node-fetch');
-const Discord = require('discord.js');
-const {palette} = require('../config.json');
 const api = 'https://en.wikipedia.org/w/api.php';
-
-const buildEmbed = (title, pageID, excerpt, msg) => {
-  return new Discord.MessageEmbed()
-      .setColor(palette.dark)
-      .setAuthor(
-          'Wikipedia',
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
-          'https://en.wikipedia.org',
-      )
-      .setTitle(title)
-      .setURL(`https://en.wikipedia.org/?curid=${pageID}`)
-      .setDescription(excerpt)
-      .setFooter(
-          `Requested by ${msg.author.username}`,
-          msg.author.displayAvatarURL,
-      )
-      .setTimestamp(new Date());
-};
+const embedBuilder = require('./helpers/embedBuilder.js');
 
 const buildSearchString = async (searchStr) => {
   // first search, get the right capitalization, then query
@@ -82,7 +63,10 @@ const callWiki = async (msg, args) => {
         '...' :
       extract;
 
-  const embed = buildEmbed(title, pageID, excerpt, msg);
+  const embed = embedBuilder.buildEmbed('Wikipedia', title,
+      msg.author.username, excerpt, `https://en.wikipedia.org/?curid=${pageID}`,
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
+      'https://en.wikipedia.org');
 
   if (img) embed.setThumbnail(img);
 

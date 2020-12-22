@@ -1,18 +1,5 @@
-const Discord = require('discord.js');
-const {palette} = require('../config.json');
 const fetch = require('node-fetch');
-
-const buildEmbed = (output, userName) => {
-  const embed = new Discord.MessageEmbed()
-      .setColor(palette.mid1)
-      .setAuthor('Watch2Gether 🐈')
-      .setFooter(`Requested by ${userName}`)
-      .setTimestamp(new Date());
-
-  embed.setTitle(output);
-
-  return embed;
-};
+const embedBuilder = require('./helpers/embedBuilder.js');
 
 const createRoom = async (url) => {
   const KEY = process.env.WATCH2GETHER_KEY;
@@ -43,7 +30,8 @@ module.exports = {
 
     const url = args[0];
     const roomUrl = await createRoom(url);
-    const embed = buildEmbed(roomUrl, msg.author.username);
+    const embed = embedBuilder.buildEmbed('Watch2Gether 🐈', roomUrl,
+        msg.author.username);
 
     msg.channel.send(embed);
   },
