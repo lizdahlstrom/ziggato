@@ -1,5 +1,4 @@
-const Discord = require('discord.js');
-const {palette} = require('../config.json');
+const embedBuilder = require('./helpers/embedBuilder.js');
 const {Translate} = require('@google-cloud/translate').v2;
 
 // Creates a client
@@ -55,13 +54,8 @@ module.exports = {
       output = `Something is wrong with your command yo.`;
     }
 
-    const embed = new Discord.MessageEmbed()
-        .setColor(palette.mid1)
-        .setAuthor('Translator 🐈')
-        .setTitle(output)
-        .setDescription(`From: *"${text}"*`)
-        .setFooter(`Requested by ${msg.author.username}`, msg.author.authorURL)
-        .setTimestamp(new Date());
+    const embed = embedBuilder.buildEmbed('Translator 🐈', output,
+        msg.author.username, `From: *"${text}"*`);
 
     msg.channel.send(embed);
   },
