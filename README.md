@@ -1,21 +1,41 @@
 # Ziggato - Discord Bot
 
-Initally built with SitePoint boilerplate.
+Ziggato can do the following:
 
-Link to article on SitePoint: [https://www.sitepoint.com/discord-bot-node-js/](https://www.sitepoint.com/discord-bot-node-js/)
+- Get gifs from Giphy
+- Convert currencies
+- Get jokes based on type
+- Fetch lyrics
+- Display games that are in common between steam users
+- Translate text using Google translate
+- Unit conversion
+- Create Watch2Gether rooms
+- Search and display Wikipedia entries
+- Show synonyms or rhymes of words
+
+(Initally built with SitePoint boilerplate.)
 
 ## Requirements
 
 - [Node.js](http://nodejs.org/)
 - [Discord](https://discordapp.com/) account
 
+### Optional
+
+- Giphy API key
+- Google Platform project and service account with cloud key (for translations)
+- Steam API key
+- Watch2Gether API key
+
 ## Installation Steps (if applicable)
 
 1. Clone repo
 2. Run `npm install`
-3. Add Discord credentials in a `.env` file
-3. Run `npm start`
-4. Interact with your Discord bot via your web browser
+3. Add credentials in a `.env` file (see template.env)
+4. Run `npm start`
+5. Interact with your Discord bot via your web browser
+
+Note: For the google translate functionality, follow the steps [here](https://www.npmjs.com/package/@google-cloud/translate).
 
 ## License
 
