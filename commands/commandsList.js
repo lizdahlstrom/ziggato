@@ -19,6 +19,11 @@ module.exports = {
         'mandatory value. ``...`` indicate optionally multiple values',
       fields: [
         {
+          name: 'Alternate GPU tracker',
+          value: '``gpu <3060| 3070 | 3080 | 3090>``',
+          inline: false,
+        },
+        {
           name: 'Giphy',
           value: '``gif [random | search] <text>...``',
           inline: false,
@@ -72,7 +77,7 @@ module.exports = {
         {
           name: 'Word-find',
           value:
-            '``wordfind [syn | rhy] <word>`` - Get synonyms or rhymes of a ' +
+            '``wordfind <syn | rhy> <word>`` - Get synonyms or rhymes of a ' +
             ' word',
           inline: false,
         },

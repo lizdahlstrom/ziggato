@@ -12,10 +12,12 @@
   "license": "MIT",
   "dependencies": {
     "@google-cloud/translate": "^6.0.1",
+    "cheerio": "*",
     "convert-units": "^2.3.4",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "puppeteer": "^9.0.0"
   },
   "devDependencies": {
     "eslint": "^7.14.0",

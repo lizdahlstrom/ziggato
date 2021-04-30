@@ -1,5 +1,6 @@
 module.exports = {
   Ping: require('./ping'),
+  GPU: require('./alternate-gpu-tracker'),
   Giphy: require('./giphy'),
   Help: require('./commandsList'),
   Steam: require('./steam'),
