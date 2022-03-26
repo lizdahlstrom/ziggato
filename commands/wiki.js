@@ -1,18 +1,18 @@
 const fetch = require('node-fetch');
 const api = 'https://en.wikipedia.org/w/api.php';
 const embedBuilder = require('./helpers/embedBuilder.js');
+const NOT_FOUND_MSG = `Nopes! Couldn't find that in da wiki 😿`;
 
 const buildSearchString = async (searchStr) => {
   // first search, get the right capitalization, then query
   const apiSearch =
     api +
     `?action=opensearch&search=${searchStr}&limit=1&namespace=0&format=json`;
-  // search
+
   let search = await fetch(apiSearch);
   search = await search.json();
 
-  searchStr = search[1][0] ? search[1][0].replace(' ', '%20') : '';
-  return searchStr;
+  return search[1][0] ? search[1][0].replace(' ', '%20') : '';
 };
 
 const joinWithApiStrDelimiter = (arr) => {
@@ -22,7 +22,8 @@ const joinWithApiStrDelimiter = (arr) => {
 const fetchWikiPage = async (url) => {
   let result = await fetch(url);
   result = await result.json();
-  if (!result.query) throw new Error(`Nopes! Couldn't find that in da wiki 😿`);
+  if (!result.query) throw new Error(NOT_FOUND_MSG);
+
   result = Object.values(result.query.pages)[0];
   return result;
 };
@@ -40,21 +41,15 @@ const callWiki = async (msg, args) => {
   const searchStr = await buildSearchString(joinWithApiStrDelimiter(args));
 
   const query = `${api}?format=json&action=query&titles=${searchStr}`;
-  const wikiUrl = `${query}&prop=extracts&exintro&explaintext&redirects=1`;
 
-  const wikiPage = await fetchWikiPage(wikiUrl);
+  const {pageID, title, extract} = await
+  fetchWikiPage(`${query}&prop=extracts&exintro&explaintext&redirects=1`);
 
-  const pageID = wikiPage.pageid;
+  if (!pageID) throw new Error(NOT_FOUND_MSG);
 
-  if (!pageID) throw new Error(`Nopes! Couldn't find that in da wiki 😿`);
-
-  // get image
-  const imageURL = `${query}&prop=pageimages&pithumbsize=100`;
-
-  const img = await fetchWikiImage(imageURL, pageID);
-
-  const title = wikiPage.title;
-  const extract = wikiPage.extract;
+  const img = await fetchWikiImage(
+      `${query}&prop=pageimages&pithumbsize=100`,
+      pageID);
   const maxLength = 880;
 
   const excerpt =
@@ -63,8 +58,12 @@ const callWiki = async (msg, args) => {
         '...' :
       extract;
 
+  return {title, excerpt, pageID, img};
+};
+
+const _buildMessage = ({title, excerpt, pageID, img}, author) => {
   const embed = embedBuilder.buildEmbed('Wikipedia', title,
-      msg.author.username, excerpt, `https://en.wikipedia.org/?curid=${pageID}`,
+      author, excerpt, `https://en.wikipedia.org/?curid=${pageID}`,
       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
       'https://en.wikipedia.org');
 
@@ -83,6 +82,7 @@ module.exports = {
 
     try {
       output = await callWiki(msg, args);
+      msg.channel.send(_buildMessage(output, msg.channel.author));
     } catch (err) {
       output = err.message;
     }

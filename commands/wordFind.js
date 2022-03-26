@@ -15,7 +15,6 @@ const _limitStrLength = (text, max) => {
   return text.substring(0, (text + '\n').lastIndexOf('\n', max));
 };
 
-
 const _formatWordArr =(arr) => {
   arr = arr.map((word) => `• ${word.word}`).join('\n');
 
