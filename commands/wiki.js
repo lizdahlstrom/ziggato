@@ -82,7 +82,7 @@ module.exports = {
 
     try {
       output = await callWiki(msg, args);
-      msg.channel.send(_buildMessage(output, msg.channel.author));
+      output = _buildMessage(output, msg.channel.author);
     } catch (err) {
       output = err.message;
     }
