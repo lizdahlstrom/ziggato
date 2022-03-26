@@ -2,33 +2,36 @@ const embedBuilder = require('./helpers/embedBuilder.js');
 const {Translate} = require('@google-cloud/translate').v2;
 
 // Creates a client
-const translate = new Translate({projectId: 'ziggato'});
+const translate = new Translate({
+  projectId: process.env.GOOGLE_PROJECT_ID,
+  keyFilename: process.env.GOOGLE_KEYFILENAME,
+});
 
-const determineTarget = async (config) => {
-  let target = config.target;
-  let text = config.text;
+const determineTarget = async (targetLang, text) => {
+  if (targetLang.length > 3 || targetLang.length === 0) {
+    text = targetLang + (text ? ' ' + text : '');
+    targetLang = 'en';
 
-  if (target.length > 3 || target.length === 0) {
-    text = target + (text ? ' ' + text : '');
-    target = 'en';
-  } else {
-    let [languages] = await translate.getLanguages();
-    languages = languages.map((lang) => lang.code);
-    if (!languages.includes(target)) {
-      text = target + ' ' + text;
-      target = 'en';
-    }
+    return {targetLang, text};
   }
 
-  return {target, text};
+  let [languages] = await translate.getLanguages();
+  languages = languages.map((lang) => lang.code);
+
+  if (!languages.includes(targetLang)) {
+    text = targetLang + ' ' + text;
+    targetLang = 'en';
+  }
+
+  return {targetLang, text};
 };
 
-const callTranslate = async (msg, target, text) => {
+const callTranslate = async (target, text) => {
+  let [translations] = await translate.translate(text, target);
+  translations = Array.isArray(translations) ? translations : [translations];
+
   let result = '';
 
-  let [translations] = await translate.translate(text, target);
-
-  translations = Array.isArray(translations) ? translations : [translations];
   translations.forEach((translation, i) => {
     result += translation;
   });
@@ -43,13 +46,13 @@ module.exports = {
     if (!args || args.length === 0) return;
 
     let output = 'no dice';
-    const target = args.shift();
+    const targetLang = args.shift();
     let text = args.join(' ');
 
     try {
-      const config = await determineTarget({target, text});
+      const config = await determineTarget(targetLang, text);
       text = config.text;
-      output = await callTranslate(msg, config.target, config.text);
+      output = await callTranslate(config.targetLang, config.text);
     } catch (err) {
       output = `Something is wrong with your command yo.`;
     }
