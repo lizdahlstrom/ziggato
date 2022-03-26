@@ -42,14 +42,14 @@ const callWiki = async (msg, args) => {
 
   const query = `${api}?format=json&action=query&titles=${searchStr}`;
 
-  const {pageID, title, extract} = await
+  const {pageid, title, extract} = await
   fetchWikiPage(`${query}&prop=extracts&exintro&explaintext&redirects=1`);
 
-  if (!pageID) throw new Error(NOT_FOUND_MSG);
+  if (!pageid) throw new Error(NOT_FOUND_MSG);
 
   const img = await fetchWikiImage(
       `${query}&prop=pageimages&pithumbsize=100`,
-      pageID);
+      pageid);
   const maxLength = 880;
 
   const excerpt =
@@ -58,12 +58,12 @@ const callWiki = async (msg, args) => {
         '...' :
       extract;
 
-  return {title, excerpt, pageID, img};
+  return {title, excerpt, pageid, img};
 };
 
-const _buildMessage = ({title, excerpt, pageID, img}, author) => {
+const _buildMessage = ({title, excerpt, pageid, img}, author) => {
   const embed = embedBuilder.buildEmbed('Wikipedia', title,
-      author, excerpt, `https://en.wikipedia.org/?curid=${pageID}`,
+      author, excerpt, `https://en.wikipedia.org/?curid=${pageid}`,
       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
       'https://en.wikipedia.org');
 
