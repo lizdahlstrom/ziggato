@@ -28,18 +28,12 @@ const callTranslate = async (target, text) => {
   let [translations] = await translate.translate(text, target);
   translations = Array.isArray(translations) ? translations : [translations];
 
-  let result = '';
-
-  translations.forEach((translation, i) => {
-    result += translation;
-  });
-
-  return result;
+  return translations.join('');
 };
 
-const buildMessage = (output, author, text)=> {
-  return embedBuilder.buildEmbed('Translator 🐈', output,
-      author, `From: *"${text}"*`);
+const buildMessage = (translation, author, inputText)=> {
+  return embedBuilder.buildEmbed('Translator 🐈', translation,
+      author, `From: *"${inputText}"*`);
 };
 
 module.exports = {
@@ -52,8 +46,8 @@ module.exports = {
     const textStr = args.join(' ');
 
     const {targetLang, text = textStr} = await determineTarget(target, textStr);
-    const output = await callTranslate(targetLang, text);
+    const translation = await callTranslate(targetLang, text);
 
-    msg.channel.send(buildMessage(output, msg.author.username, text));
+    msg.channel.send(buildMessage(translation, msg.author.username, text));
   },
 };
