@@ -7,23 +7,21 @@ const translate = new Translate({
   keyFilename: process.env.GOOGLE_KEYFILENAME,
 });
 
-const determineTarget = async (targetLang, text) => {
+const determineTarget = async (targetLang, text ='') => {
+  // handles case of first param not being target Language
   if (targetLang.length > 3 || targetLang.length === 0) {
-    text = targetLang + (text ? ' ' + text : '');
-    targetLang = 'en';
-
-    return {targetLang, text};
+    return {
+      targetLang: 'en',
+      text: targetLang + text,
+    };
   }
 
   let [languages] = await translate.getLanguages();
   languages = languages.map((lang) => lang.code);
+  // default target language is english
+  if (!languages.includes(targetLang)) targetLang = 'en';
 
-  if (!languages.includes(targetLang)) {
-    text = targetLang + ' ' + text;
-    targetLang = 'en';
-  }
-
-  return {targetLang, text};
+  return {targetLang};
 };
 
 const callTranslate = async (target, text) => {
@@ -39,27 +37,23 @@ const callTranslate = async (target, text) => {
   return result;
 };
 
+const buildMessage = (output, author, text)=> {
+  return embedBuilder.buildEmbed('Translator 🐈', output,
+      author, `From: *"${text}"*`);
+};
+
 module.exports = {
   name: 'translate',
   description: 'Translate',
   async execute(msg, args) {
     if (!args || args.length === 0) return;
 
-    let output = 'no dice';
-    const targetLang = args.shift();
-    let text = args.join(' ');
+    const target = args.shift();
+    const textStr = args.join(' ');
 
-    try {
-      const config = await determineTarget(targetLang, text);
-      text = config.text;
-      output = await callTranslate(config.targetLang, config.text);
-    } catch (err) {
-      output = `Something is wrong with your command yo.`;
-    }
+    const {targetLang, text = textStr} = await determineTarget(target, textStr);
+    const output = await callTranslate(targetLang, text);
 
-    const embed = embedBuilder.buildEmbed('Translator 🐈', output,
-        msg.author.username, `From: *"${text}"*`);
-
-    msg.channel.send(embed);
+    msg.channel.send(buildMessage(output, msg.author.username, text));
   },
 };
