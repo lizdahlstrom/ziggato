@@ -37,6 +37,10 @@ Ziggato can do the following:
 
 Note: For the google translate functionality, follow the steps [here](https://www.npmjs.com/package/@google-cloud/translate).
 
+## Deployment
+
+Github yaml file is configured for Linux 64 system. Add vars to Github secrets.
+
 ## License
 
 SitePoint's code archives and code examples are licensed under the MIT license.
