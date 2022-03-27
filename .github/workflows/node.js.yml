@@ -35,7 +35,7 @@ jobs:
         echo STEAM_KEY=${{ secrets.STEAM_KEY }} >> .env
         echo WATCH2GETHER_KEY=${{ secrets.WATCH2GETHER_KEY}} >> .env
     - run: |
-        touch ${{secrets.GOOGLEKEYFILENAME}}
-        echo ${{secrets.GCLOUD_KEY}} >> ${{secrets.GOOGLEKEYFILENAME}}
+        touch ${{secrets.GOOGLE_KEYFILENAME}}
+        echo ${{secrets.GCLOUD_KEY}} >> ${{secrets.GOOGLE_KEYFILENAME}}
     - run: npm i
     - run: pm2 restart ziggato
