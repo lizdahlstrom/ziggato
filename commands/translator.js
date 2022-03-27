@@ -45,7 +45,11 @@ module.exports = {
     const target = args.shift();
     const textStr = args.join(' ');
 
-    const {targetLang, text = textStr} = await determineTarget(target, textStr);
+    const {
+      targetLang,
+      text = (`${target} ${textStr}`),
+    } = await determineTarget(target, textStr);
+
     const translation = await callTranslate(targetLang, text);
 
     msg.channel.send(buildMessage(translation, msg.author.username, text));
