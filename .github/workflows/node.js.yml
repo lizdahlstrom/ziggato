@@ -27,15 +27,15 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: |
-      touch .env
-      echo DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} >> .env
-      echo GIPHY_KEY=${{ secrets.GIPHY_KEY }} >> .env
-      echo GOOGLE_KEYFILENAME=${{ secrets.GOOGLE_KEYFILENAME }} >> .env
-      echo GOOGLE_PROJECT_ID=${{ secrets.GOOGLE_PROJECT_ID }} >> .env
-      echo STEAM_KEY=${{ secrets.STEAM_KEY }} >> .env
-      echo WATCH2GETHER_KEY=${{ secrets.WATCH2GETHER_KEY}} >> .env
+        touch .env
+        echo DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} >> .env
+        echo GIPHY_KEY=${{ secrets.GIPHY_KEY }} >> .env
+        echo GOOGLE_KEYFILENAME=${{ secrets.GOOGLE_KEYFILENAME }} >> .env
+        echo GOOGLE_PROJECT_ID=${{ secrets.GOOGLE_PROJECT_ID }} >> .env
+        echo STEAM_KEY=${{ secrets.STEAM_KEY }} >> .env
+        echo WATCH2GETHER_KEY=${{ secrets.WATCH2GETHER_KEY}} >> .env
     - run: |
-      touch ${{secrets.GOOGLEKEYFILENAME}}
-      echo ${{secrets.GCLOUD_KEY}} >> ${{secrets.GOOGLEKEYFILENAME}}
+        touch ${{secrets.GOOGLEKEYFILENAME}}
+        echo ${{secrets.GCLOUD_KEY}} >> ${{secrets.GOOGLEKEYFILENAME}}
     - run: npm i
     - run: pm2 restart ziggato
