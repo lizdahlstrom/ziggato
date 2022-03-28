@@ -62,6 +62,7 @@ const callWiki = async (msg, args) => {
 };
 
 const _buildMessage = ({title, excerpt, pageid, img}, author) => {
+  console.log(author);
   const embed = embedBuilder.buildEmbed('Wikipedia', title,
       author, excerpt, `https://en.wikipedia.org/?curid=${pageid}`,
       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/135px-Wikipedia-logo-v2-en.svg.png',
@@ -82,7 +83,7 @@ module.exports = {
 
     try {
       output = await callWiki(msg, args);
-      output = _buildMessage(output, msg.channel.author);
+      output = _buildMessage(output, msg.author.username);
     } catch (err) {
       output = err.message;
     }
