@@ -1,35 +1,51 @@
 const fetch = require('node-fetch');
 const api = 'https://en.wikipedia.org/w/api.php';
 const embedBuilder = require('./helpers/embedBuilder.js');
-const NOT_FOUND_MSG = `Nopes! Couldn't find that in da wiki 😿`;
+const NOT_FOUND_MSG = `Couldn't find that in the wiki 😿`;
 
-const buildSearchString = async (searchStr) => {
-  // first search, get the right capitalization, then query
-  const apiSearch =
-    api +
-    `?action=opensearch&search=${searchStr}&limit=1&namespace=0&format=json`;
+const _fetchSearchString = async (searchStr) => {
+  let search = await fetch(`${api}?${new URLSearchParams({
+    action: 'opensearch',
+    limit: '1',
+    namespace: '0',
+    format: 'json',
+  })}&search=${searchStr}`);
 
-  let search = await fetch(apiSearch);
   search = await search.json();
 
-  return search[1][0] ? search[1][0].replace(' ', '%20') : '';
+  return search[1][0] || '';
 };
 
-const joinWithApiStrDelimiter = (arr) => {
-  return arr.join('%20');
-};
+const _fetchPage = async (searchStr) => {
+  let result = await fetch(`${api}?${new URLSearchParams({
+    format: 'json',
+    action: 'query',
+    titles: searchStr,
+    prop: 'extracts',
+    redirects: 1,
+    exintro: true,
+    explaintext: true,
+  })}`);
 
-const fetchWikiPage = async (url) => {
-  let result = await fetch(url);
   result = await result.json();
   if (!result.query) throw new Error(NOT_FOUND_MSG);
 
   result = Object.values(result.query.pages)[0];
+
+  if (!result.pageid) throw new Error(NOT_FOUND_MSG);
+
   return result;
 };
 
-const fetchWikiImage = async (url, pageID) => {
-  let img = await fetch(url);
+const _fetchImg = async (searchStr, pageID) => {
+  let img = await fetch(`${api}?${new URLSearchParams({
+    format: 'json',
+    action: 'query',
+    titles: searchStr,
+    prop: 'pageimages',
+    pithumbsize: 100,
+  })}`);
+
   img = await img.json();
 
   return img.query.pages[pageID] && img.query.pages[pageID].thumbnail ?
@@ -37,26 +53,22 @@ const fetchWikiImage = async (url, pageID) => {
       null;
 };
 
-const callWiki = async (msg, args) => {
-  const searchStr = await buildSearchString(joinWithApiStrDelimiter(args));
-
-  const query = `${api}?format=json&action=query&titles=${searchStr}`;
-
-  const {pageid, title, extract} = await
-  fetchWikiPage(`${query}&prop=extracts&exintro&explaintext&redirects=1`);
-
-  if (!pageid) throw new Error(NOT_FOUND_MSG);
-
-  const img = await fetchWikiImage(
-      `${query}&prop=pageimages&pithumbsize=100`,
-      pageid);
+const _formatExcerpt = (text) => {
   const maxLength = 880;
 
-  const excerpt =
-    extract.length >= maxLength ?
-      extract.substring(0, (extract + '.').lastIndexOf('.', maxLength)) +
-        '...' :
-      extract;
+  return text.length >= maxLength ?
+  text.substring(0, (text + '.').lastIndexOf('.', maxLength)) +
+    '...' : text;
+};
+
+const _getWiki = async (msg, args) => {
+  const searchStr = await _fetchSearchString(args.join('%20'));
+
+  const {pageid, title, extract} = await _fetchPage(searchStr);
+
+  const img = await _fetchImg(searchStr, pageid);
+
+  const excerpt = _formatExcerpt(extract);
 
   return {title, excerpt, pageid, img};
 };
@@ -81,10 +93,10 @@ module.exports = {
     let output = '';
 
     try {
-      output = await callWiki(msg, args);
-      output = _buildMessage(output, msg.channel.author);
+      const wiki = await _getWiki(msg, args);
+      output = _buildMessage(wiki, msg.author.username);
     } catch (err) {
-      output = err.message;
+      output = err;
     }
 
     msg.channel.send(output);
