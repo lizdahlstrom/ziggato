@@ -41,7 +41,7 @@ module.exports = {
   description: 'Units converter',
   async execute(msg, args) {
     if (args.length > 3 && args[0] !== 'list') {
-      throw new Error('Invalid arguments');
+      throw new Error('Invalid input');
     }
 
     let output = '';
@@ -52,11 +52,15 @@ module.exports = {
       } else if (args.length === 3) {
         const [original, target, amount] = args;
 
+        if (isNaN(amount)) throw new Error('Invalid input for amount');
+
         output = _convert(original, target, amount);
       }
     } catch (err) {
       output = err.message;
     }
+
+    if (!output) return;
 
     msg.channel.send(_buildMessage(msg.author.username, output));
   },
